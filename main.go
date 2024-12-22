@@ -28,5 +28,20 @@ func NewPokerHand(cards []string) *PokerHand {
 }
 
 func (p *PokerHand) GetCombo() string {
+	if p.hasDoubleValue() {
+		return Pair
+	}
 	return HighCard
+}
+
+func (p *PokerHand) hasDoubleValue() bool {
+	for i := 0; i < len(p.cards); i++ {
+		for j := i + 1; j < len(p.cards); j++ {
+			if p.cards[i][0] == p.cards[j][0] {
+				return true
+			}
+		}
+	}
+
+	return false
 }
