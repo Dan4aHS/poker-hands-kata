@@ -27,6 +27,11 @@ func TestFlush(t *testing.T) {
 	assertString(t, Flush, ph.GetCombo())
 }
 
+func TestFourOfAKind(t *testing.T) {
+	ph := NewPokerHand([]string{"5H", "5C", "5S", "5D", "8C"})
+	assertString(t, FourOfAKind, ph.GetCombo())
+}
+
 func assertString(t *testing.T, expected, actual string) {
 	if expected != actual {
 		t.Errorf("expected: %s, actual: %s", expected, actual)
