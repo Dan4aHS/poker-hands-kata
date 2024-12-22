@@ -1,7 +1,14 @@
 package main
 
-type PokerHand struct{}
+// 2-10, J, Q, K, A
+// H-hearts, D-diamonds, S-spares, C-clubs
 
-func NewPokerHand() *PokerHand {
-	return &PokerHand{}
+type PokerHand struct {
+	cards []string
+}
+
+func NewPokerHand(cards []string) *PokerHand {
+	return &PokerHand{
+		cards: cards,
+	}
 }
