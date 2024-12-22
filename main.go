@@ -28,20 +28,40 @@ func NewPokerHand(cards []string) *PokerHand {
 }
 
 func (p *PokerHand) GetCombo() string {
-	if p.hasDoubleValue() {
+	switch {
+	case p.countPairs() == 1:
 		return Pair
+	case p.countPairs() == 2:
+		return TwoPairs
+	case p.countPairs() == 3:
+		return ThreeOfAKind
+	case p.hasFlush():
+		return Flush
+	default:
+		return HighCard
 	}
-	return HighCard
 }
 
-func (p *PokerHand) hasDoubleValue() bool {
+func (p *PokerHand) countPairs() int {
+	counter := 0
 	for i := 0; i < len(p.cards); i++ {
 		for j := i + 1; j < len(p.cards); j++ {
 			if p.cards[i][0] == p.cards[j][0] {
-				return true
+				counter++
 			}
 		}
 	}
 
-	return false
+	return counter
+}
+
+func (p *PokerHand) hasFlush() bool {
+	sample := p.cards[0][1]
+	for i := 1; i < len(p.cards); i++ {
+		if p.cards[i][1] != sample {
+			return false
+		}
+	}
+
+	return true
 }
