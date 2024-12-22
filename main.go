@@ -18,12 +18,16 @@ const (
 )
 
 type PokerHand struct {
-	cards []string
+	cards []Card
 }
 
 func NewPokerHand(cards []string) *PokerHand {
+	parsedCards := make([]Card, 0, len(cards))
+	for _, c := range cards {
+		parsedCards = append(parsedCards, NewCard(c))
+	}
 	return &PokerHand{
-		cards: cards,
+		cards: parsedCards,
 	}
 }
 
@@ -48,7 +52,7 @@ func (p *PokerHand) countPairs() int {
 	counter := 0
 	for i := 0; i < len(p.cards); i++ {
 		for j := i + 1; j < len(p.cards); j++ {
-			if p.cards[i][0] == p.cards[j][0] {
+			if p.cards[i].value == p.cards[j].value {
 				counter++
 			}
 		}
@@ -58,9 +62,9 @@ func (p *PokerHand) countPairs() int {
 }
 
 func (p *PokerHand) hasFlush() bool {
-	sample := p.cards[0][1]
+	sample := p.cards[0].suit
 	for i := 1; i < len(p.cards); i++ {
-		if p.cards[i][1] != sample {
+		if p.cards[i].suit != sample {
 			return false
 		}
 	}
