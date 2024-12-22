@@ -1,5 +1,7 @@
 package main
 
+import "sort"
+
 // 2-10, J, Q, K, A
 // H-hearts, D-diamonds, S-spares, C-clubs
 
@@ -43,6 +45,8 @@ func (p *PokerHand) GetCombo() string {
 		return FourOfAKind
 	case p.hasFlush():
 		return Flush
+	case p.hasStraight():
+		return Straight
 	default:
 		return HighCard
 	}
@@ -65,6 +69,32 @@ func (p *PokerHand) hasFlush() bool {
 	sample := p.cards[0].suit
 	for i := 1; i < len(p.cards); i++ {
 		if p.cards[i].suit != sample {
+			return false
+		}
+	}
+
+	return true
+}
+
+func (p *PokerHand) hasStraight() bool {
+	uniqueMap := make(map[int]struct{})
+	for _, card := range p.cards {
+		uniqueMap[card.value] = struct{}{}
+	}
+
+	if len(uniqueMap) != 5 {
+		return false
+	}
+
+	values := make([]int, 0, len(uniqueMap))
+	for k := range uniqueMap {
+		values = append(values, k)
+	}
+
+	sort.Ints(values)
+
+	for i := 0; i < len(values)-1; i++ {
+		if values[i+1]-values[i] != 1 {
 			return false
 		}
 	}
