@@ -39,14 +39,29 @@ func TestPokerHands(t *testing.T) {
 			FourOfAKind,
 		},
 		{
+			"CanStraight",
+			[]string{"5H", "6C", "7S", "8D", "9C"},
+			Straight,
+		},
+		{
 			"CanStraightFromAceToFive",
 			[]string{"AH", "2C", "3S", "4D", "5C"},
 			Straight,
 		},
 		{
-			"CanStraight",
-			[]string{"5H", "6C", "7S", "8D", "9C"},
-			Straight,
+			"CanStraightFlush",
+			[]string{"AH", "2H", "3H", "4H", "5H"},
+			StraightFlush,
+		},
+		{
+			"CanFullHouse",
+			[]string{"AC", "AH", "AS", "QH", "QD"},
+			FullHouse,
+		},
+		{
+			"CanRoyalFlush",
+			[]string{"AC", "KC", "QC", "JC", "TC"},
+			RoyalFlush,
 		},
 	}
 

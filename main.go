@@ -41,8 +41,12 @@ func (p *PokerHand) GetCombo() string {
 		return TwoPairs
 	case p.countPairs() == 3:
 		return ThreeOfAKind
+	case p.countPairs() == 4:
+		return FullHouse
 	case p.countPairs() == 6:
 		return FourOfAKind
+	case p.hasFlush() && p.hasStraight():
+		return StraightFlush
 	case p.hasFlush():
 		return Flush
 	case p.hasStraight():
