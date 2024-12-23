@@ -37,6 +37,11 @@ func TestStraight(t *testing.T) {
 	assertString(t, Straight, ph.GetCombo())
 }
 
+func TestStraightFromAceToFive(t *testing.T) {
+	ph := NewPokerHand([]string{"AH", "2C", "3S", "4D", "5C"})
+	assertString(t, Straight, ph.GetCombo())
+}
+
 func assertString(t *testing.T, expected, actual string) {
 	if expected != actual {
 		t.Errorf("expected: %s, actual: %s", expected, actual)

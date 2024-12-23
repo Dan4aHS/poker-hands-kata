@@ -95,6 +95,10 @@ func (p *PokerHand) hasStraight() bool {
 
 	for i := 0; i < len(values)-1; i++ {
 		if values[i+1]-values[i] != 1 {
+			if i == 3 && values[i+1] == 14 && values[0] == 2 {
+				return true
+			}
+
 			return false
 		}
 	}
