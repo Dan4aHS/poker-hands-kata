@@ -4,7 +4,7 @@ import (
 	"sort"
 )
 
-// 2-10, J, Q, K, A
+// 2-9, T, J, Q, K, A
 // H-hearts, D-diamonds, S-spares, C-clubs
 
 // Combos:
@@ -98,14 +98,17 @@ func (p *PokerHand) countPairs() int {
 }
 
 func (p *PokerHand) hasFlush() bool {
-	sample := p.cards[0].suit
 	for i := 1; i < len(p.cards); i++ {
-		if p.cards[i].suit != sample {
+		if p.cards[i].suit != p.flushPotentialSuit() {
 			return false
 		}
 	}
 
 	return true
+}
+
+func (p *PokerHand) flushPotentialSuit() byte {
+	return p.cards[0].suit
 }
 
 func (p *PokerHand) hasStraight() bool {
@@ -165,6 +168,7 @@ func (p *PokerHand) uniqueCardValuesMap() map[int]struct{} {
 	for _, card := range p.cards {
 		uniqueMap[card.value] = struct{}{}
 	}
+
 	return uniqueMap
 }
 
