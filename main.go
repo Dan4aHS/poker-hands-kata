@@ -1,6 +1,8 @@
 package main
 
-import "sort"
+import (
+	"sort"
+)
 
 // 2-10, J, Q, K, A
 // H-hearts, D-diamonds, S-spares, C-clubs
@@ -45,6 +47,8 @@ func (p *PokerHand) GetCombo() string {
 		return FullHouse
 	case p.countPairs() == 6:
 		return FourOfAKind
+	case p.hasRoyalFlush():
+		return RoyalFlush
 	case p.hasFlush() && p.hasStraight():
 		return StraightFlush
 	case p.hasFlush():
@@ -108,4 +112,24 @@ func (p *PokerHand) hasStraight() bool {
 	}
 
 	return true
+}
+
+func (p *PokerHand) hasRoyalFlush() bool {
+	if p.hasFlush() && p.hasStraight() {
+		var hasAce, hasTen bool
+		for _, card := range p.cards {
+			if card.value == valueMap['A'] {
+				hasAce = true
+			}
+			if card.value == valueMap['T'] {
+				hasTen = true
+			}
+		}
+
+		if hasAce && hasTen {
+			return true
+		}
+	}
+
+	return false
 }
