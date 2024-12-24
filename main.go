@@ -30,34 +30,58 @@ func NewPokerHand(cards []string) *PokerHand {
 	for _, c := range cards {
 		parsedCards = append(parsedCards, NewCard(c))
 	}
+
 	return &PokerHand{
 		cards: parsedCards,
 	}
 }
 
 func (p *PokerHand) GetCombo() string {
+	if v, ok := p.pairCombo(); ok {
+		return v
+	}
+
+	if v, ok := p.noPairCombo(); ok {
+		return v
+	}
+
+	return HighCard
+}
+
+func (p *PokerHand) noPairCombo() (string, bool) {
+	switch {
+	case p.hasRoyalFlush():
+		return RoyalFlush, true
+	case p.hasStraightFlush():
+		return StraightFlush, true
+	case p.hasFlush():
+		return Flush, true
+	case p.hasStraight():
+		return Straight, true
+	}
+
+	return "", false
+}
+
+func (p *PokerHand) hasStraightFlush() bool {
+	return p.hasFlush() && p.hasStraight()
+}
+
+func (p *PokerHand) pairCombo() (string, bool) {
 	switch {
 	case p.countPairs() == 1:
-		return Pair
+		return Pair, true
 	case p.countPairs() == 2:
-		return TwoPairs
+		return TwoPairs, true
 	case p.countPairs() == 3:
-		return ThreeOfAKind
+		return ThreeOfAKind, true
 	case p.countPairs() == 4:
-		return FullHouse
+		return FullHouse, true
 	case p.countPairs() == 6:
-		return FourOfAKind
-	case p.hasRoyalFlush():
-		return RoyalFlush
-	case p.hasFlush() && p.hasStraight():
-		return StraightFlush
-	case p.hasFlush():
-		return Flush
-	case p.hasStraight():
-		return Straight
-	default:
-		return HighCard
+		return FourOfAKind, true
 	}
+
+	return "", false
 }
 
 func (p *PokerHand) countPairs() int {
@@ -85,21 +109,10 @@ func (p *PokerHand) hasFlush() bool {
 }
 
 func (p *PokerHand) hasStraight() bool {
-	uniqueMap := make(map[int]struct{})
-	for _, card := range p.cards {
-		uniqueMap[card.value] = struct{}{}
-	}
-
-	if len(uniqueMap) != 5 {
+	values, ok := p.uniqueValues()
+	if !ok {
 		return false
 	}
-
-	values := make([]int, 0, len(uniqueMap))
-	for k := range uniqueMap {
-		values = append(values, k)
-	}
-
-	sort.Ints(values)
 
 	for i := 0; i < len(values)-1; i++ {
 		if values[i+1]-values[i] != 1 {
@@ -114,22 +127,39 @@ func (p *PokerHand) hasStraight() bool {
 	return true
 }
 
-func (p *PokerHand) hasRoyalFlush() bool {
-	if p.hasFlush() && p.hasStraight() {
-		var hasAce, hasTen bool
-		for _, card := range p.cards {
-			if card.value == valueMap['A'] {
-				hasAce = true
-			}
-			if card.value == valueMap['T'] {
-				hasTen = true
-			}
-		}
+func (p *PokerHand) uniqueValues() ([]int, bool) {
+	uniqueMap := make(map[int]struct{})
+	for _, card := range p.cards {
+		uniqueMap[card.value] = struct{}{}
+	}
 
-		if hasAce && hasTen {
-			return true
+	if len(uniqueMap) != 5 {
+		return nil, false
+	}
+
+	values := make([]int, 0, len(uniqueMap))
+	for k := range uniqueMap {
+		values = append(values, k)
+	}
+
+	sort.Ints(values)
+	return values, true
+}
+
+func (p *PokerHand) hasRoyalFlush() bool {
+	return p.hasStraightFlush() && p.hasAceAndTen()
+}
+
+func (p *PokerHand) hasAceAndTen() bool {
+	var hasAce, hasTen bool
+	for _, card := range p.cards {
+		if card.value == valueMap['A'] {
+			hasAce = true
+		}
+		if card.value == valueMap['T'] {
+			hasTen = true
 		}
 	}
 
-	return false
+	return hasAce && hasTen
 }
