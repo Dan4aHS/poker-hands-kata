@@ -114,9 +114,13 @@ func (p *PokerHand) hasStraight() bool {
 		return false
 	}
 
+	return p.areUniqueValuesStraight(values)
+}
+
+func (p *PokerHand) areUniqueValuesStraight(values []int) bool {
 	for i := 0; i < len(values)-1; i++ {
 		if values[i+1]-values[i] != 1 {
-			if i == 3 && values[i+1] == 14 && values[0] == 2 {
+			if p.isStraightFromAce(values, i) {
 				return true
 			}
 
@@ -127,23 +131,41 @@ func (p *PokerHand) hasStraight() bool {
 	return true
 }
 
-func (p *PokerHand) uniqueValues() ([]int, bool) {
-	uniqueMap := make(map[int]struct{})
-	for _, card := range p.cards {
-		uniqueMap[card.value] = struct{}{}
-	}
+func (p *PokerHand) isStraightFromAce(values []int, i int) bool {
+	return i == 3 && values[i+1] == 14 && values[0] == 2
+}
 
-	if len(uniqueMap) != 5 {
+func (p *PokerHand) uniqueValues() ([]int, bool) {
+	uniqueMap := p.uniqueCardValuesMap()
+
+	if !p.allCardsUnique(uniqueMap) {
 		return nil, false
 	}
 
+	return p.sortedUniqueValues(uniqueMap), true
+}
+
+func (p *PokerHand) sortedUniqueValues(uniqueMap map[int]struct{}) []int {
 	values := make([]int, 0, len(uniqueMap))
 	for k := range uniqueMap {
 		values = append(values, k)
 	}
 
 	sort.Ints(values)
-	return values, true
+
+	return values
+}
+
+func (p *PokerHand) allCardsUnique(uniqueMap map[int]struct{}) bool {
+	return len(uniqueMap) == 5
+}
+
+func (p *PokerHand) uniqueCardValuesMap() map[int]struct{} {
+	uniqueMap := make(map[int]struct{})
+	for _, card := range p.cards {
+		uniqueMap[card.value] = struct{}{}
+	}
+	return uniqueMap
 }
 
 func (p *PokerHand) hasRoyalFlush() bool {
