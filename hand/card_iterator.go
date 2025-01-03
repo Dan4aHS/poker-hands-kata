@@ -1,4 +1,4 @@
-package poker_hand
+package hand
 
 import "iter"
 
