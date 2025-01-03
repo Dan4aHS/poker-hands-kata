@@ -1,6 +1,6 @@
-package hand
+package card
 
-var valueMap = map[byte]int{
+var ValueMap = map[byte]int{
 	'2': 2,
 	'3': 3,
 	'4': 4,
@@ -21,9 +21,17 @@ type Card struct {
 	suit  byte
 }
 
+func (c *Card) Value() int {
+	return c.value
+}
+
+func (c *Card) Suit() string {
+	return string(c.suit)
+}
+
 func NewCard(s string) Card {
 	return Card{
-		value: valueMap[s[0]],
+		value: ValueMap[s[0]],
 		suit:  s[1],
 	}
 }

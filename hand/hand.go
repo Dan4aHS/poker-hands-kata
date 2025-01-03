@@ -1,6 +1,7 @@
 package hand
 
 import (
+	"poker-hands-kata/card"
 	"sort"
 )
 
@@ -22,13 +23,13 @@ const (
 )
 
 type PokerHand struct {
-	cards []Card
+	cards []card.Card
 }
 
 func NewPokerHand(cards []string) *PokerHand {
-	parsedCards := make([]Card, 0, len(cards))
+	parsedCards := make([]card.Card, 0, len(cards))
 	for _, c := range cards {
-		parsedCards = append(parsedCards, NewCard(c))
+		parsedCards = append(parsedCards, card.NewCard(c))
 	}
 
 	return &PokerHand{
@@ -88,7 +89,7 @@ func (p *PokerHand) countPairs() int {
 	counter := 0
 	for i := 0; i < len(p.cards); i++ {
 		for j := i + 1; j < len(p.cards); j++ {
-			if p.cards[i].value == p.cards[j].value {
+			if p.cards[i].Value() == p.cards[j].Value() {
 				counter++
 			}
 		}
@@ -99,7 +100,7 @@ func (p *PokerHand) countPairs() int {
 
 func (p *PokerHand) hasFlush() bool {
 	for i := 1; i < len(p.cards); i++ {
-		if p.cards[i].suit != p.flushPotentialSuit() {
+		if p.cards[i].Suit() != p.flushPotentialSuit() {
 			return false
 		}
 	}
@@ -107,8 +108,8 @@ func (p *PokerHand) hasFlush() bool {
 	return true
 }
 
-func (p *PokerHand) flushPotentialSuit() byte {
-	return p.cards[0].suit
+func (p *PokerHand) flushPotentialSuit() string {
+	return p.cards[0].Suit()
 }
 
 func (p *PokerHand) hasStraight() bool {
@@ -165,8 +166,8 @@ func (p *PokerHand) allCardsUnique(uniqueMap map[int]struct{}) bool {
 
 func (p *PokerHand) uniqueCardValuesMap() map[int]struct{} {
 	uniqueMap := make(map[int]struct{})
-	for _, card := range p.cards {
-		uniqueMap[card.value] = struct{}{}
+	for _, c := range p.cards {
+		uniqueMap[c.Value()] = struct{}{}
 	}
 
 	return uniqueMap
@@ -178,11 +179,11 @@ func (p *PokerHand) hasRoyalFlush() bool {
 
 func (p *PokerHand) hasAceAndTen() bool {
 	var hasAce, hasTen bool
-	for _, card := range p.cards {
-		if card.value == valueMap['A'] {
+	for _, c := range p.cards {
+		if c.Value() == card.ValueMap['A'] {
 			hasAce = true
 		}
-		if card.value == valueMap['T'] {
+		if c.Value() == card.ValueMap['T'] {
 			hasTen = true
 		}
 	}
