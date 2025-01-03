@@ -1,4 +1,4 @@
-package main
+package poker_hand
 
 var valueMap = map[byte]int{
 	'2': 2,

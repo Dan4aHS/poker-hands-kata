@@ -1,4 +1,4 @@
-package main
+package poker_hand
 
 import "testing"
 
