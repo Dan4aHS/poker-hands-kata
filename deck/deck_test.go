@@ -30,3 +30,15 @@ func TestDeckPickTwoCards(t *testing.T) {
 		t.Error("Expected a different card")
 	}
 }
+
+func TestDeckPickFromEmptyDeck(t *testing.T) {
+	deck := New()
+
+	for range 52 {
+		_, _ = deck.PickCard()
+	}
+
+	if _, err := deck.PickCard(); err == nil {
+		t.Error("Expected an error")
+	}
+}
