@@ -13,3 +13,7 @@ func NewPokerTable() *PokerTable {
 		state: StateEmpty,
 	}
 }
+
+func (t *PokerTable) GetCurrentCards() []card.Card {
+	return t.cards
+}
